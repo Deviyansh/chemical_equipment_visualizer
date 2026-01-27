@@ -1,0 +1,11 @@
+Equipment Name,Type,Flowrate,Pressure,Temperature
+Pump-1,Pump,45,3.2,120
+Pump-2,Pump,50,3.5,130
+Valve-1,Valve,20,2.1,90
+Valve-2,Valve,22,2.3,95
+Reactor-1,Reactor,80,5.2,300
+Reactor-2,Reactor,85,5.5,310
+Pump-3,Pump,48,3.4,125
+Valve-3,Valve,25,2.5,100
+Reactor-3,Reactor,90,5.8,320
+Pump-4,Pump,55,3.8,140

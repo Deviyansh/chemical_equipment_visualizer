@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Equipment Control Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: radial-gradient(circle at top, #111827, #020617);
+            color: #e5e7eb;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .glass {
+            background: rgba(17, 25, 40, 0.75);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 25px rgba(0,255,255,0.05);
+        }
+
+        .neon {
+            color: #22d3ee;
+        }
+
+        .metric {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            letter-spacing: 1px;
+        }
+
+        canvas {
+            max-height: 260px;
+        }
+
+        table {
+            color: #e5e7eb;
+        }
+
+        thead {
+            color: #22d3ee;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container-fluid px-4 mt-4">
+
+    <h2 class="mb-4 neon">CHEMICAL EQUIPMENT CONTROL PANEL</h2>
+
+    <!-- Upload -->
+    <div class="glass p-4 mb-4">
+        <form id="uploadForm" enctype="multipart/form-data" class="row g-3">
+            <div class="col-md-10">
+                <input type="file" name="file" class="form-control bg-dark text-light border-secondary" required>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-outline-info w-100">UPLOAD DATA</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- METRICS -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="glass p-3 text-center">
+                <div class="metric neon" id="total">--</div>
+                <div class="metric-label">TOTAL UNITS</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass p-3 text-center">
+                <div class="metric neon" id="flow">--</div>
+                <div class="metric-label">AVG FLOWRATE</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass p-3 text-center">
+                <div class="metric neon" id="pressure">--</div>
+                <div class="metric-label">AVG PRESSURE</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass p-3 text-center">
+                <div class="metric neon" id="temp">--</div>
+                <div class="metric-label">AVG TEMPERATURE</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISUALS -->
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <div class="glass p-4">
+                <h6 class="neon mb-3">EQUIPMENT DISTRIBUTION</h6>
+                <canvas id="typeChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="glass p-4">
+                <h6 class="neon mb-3">SYSTEM TABLE</h6>
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>TYPE</th>
+                            <th>COUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let chart;
+
+document.getElementById("uploadForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    const res = await fetch("/api/upload/", {
+        method: "POST",
+        body: formData,
+        headers: { "X-CSRFToken": "{{ csrf_token }}" }
+    });
+
+    const data = await res.json();
+
+    total.innerText = data.total_equipment;
+    flow.innerText = data.average_flowrate;
+    pressure.innerText = data.average_pressure;
+    temp.innerText = data.average_temperature;
+
+    const labels = Object.keys(data.equipment_type_distribution);
+    const values = Object.values(data.equipment_type_distribution);
+
+    if (chart) chart.destroy();
+
+    chart = new Chart(typeChart, {
+        type: "doughnut",
+        data: {
+            labels,
+            datasets: [{
+                data: values,
+                backgroundColor: ["#22d3ee","#38bdf8","#0ea5e9","#0284c7"]
+            }]
+        },
+        options: {
+            plugins: { legend: { labels: { color: "#e5e7eb" } } }
+        }
+    });
+
+    dataTable.innerHTML = "";
+    labels.forEach((l,i) => {
+        dataTable.innerHTML += `<tr><td>${l}</td><td>${values[i]}</td></tr>`;
+    });
+});
+</script>
+
+</body>
+</html>
