@@ -1,0 +1,18 @@
+# --- Backend (Django) ---
+Django>=5.0
+djangorestframework>=3.14
+
+# --- Data Processing ---
+pandas>=2.0
+
+# --- File Upload & Utilities ---
+python-dateutil>=2.8
+pytz>=2023.3
+
+# --- Desktop Application ---
+PyQt5>=5.15
+matplotlib>=3.7
+requests>=2.31
+
+# --- Optional (recommended) ---
+numpy>=1.24
