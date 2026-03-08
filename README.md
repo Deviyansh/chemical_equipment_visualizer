@@ -4,7 +4,7 @@
 
 ## 1. Project Overview
 
-The **Chemical Equipment Parameter Visualizer** is a hybrid data analysis and visualization system developed as part of the **FOSSEE Internship Screening Task**.
+The **Chemical Equipment Parameter Visualizer** is a hybrid data analysis and visualization system.
 
 The application allows users to upload CSV datasets containing chemical equipment parameters and analyze them through:
 - A **web-based dashboard**
