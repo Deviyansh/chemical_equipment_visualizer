@@ -1,5 +1,4 @@
 # Chemical Equipment Parameter Visualizer  
-**FOSSEE Internship Screening Task Submission**
 
 ---
 
@@ -173,4 +172,3 @@ UI design across platforms was intentionally kept consistent to provide a unifie
 ## 13. Author
 
 Deviyansh  
-Applicant — FOSSEE Internship Program
